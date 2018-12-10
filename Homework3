@@ -1,0 +1,37 @@
+package pl.waw.sgh;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+public class H3 {
+    public static void main(String[] args) throws Exception {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("MSFT.csv"));
+        String line = null;
+        while ((line = bufferedReader.readLine()) != null) {
+            System.out.println(line);
+        }
+        bufferedReader.close();
+        BufferedReader bufferedReader1 = new BufferedReader(new FileReader("IBM.csv"));
+        bufferedReader1.readLine();
+        String line1 = null;
+
+        while ((line1 = bufferedReader1.readLine()) != null) {
+            System.out.println(line1);
+
+        }
+        bufferedReader1.close();
+        BufferedReader bufferedReader2 = new BufferedReader(new FileReader("GOOG.csv"));
+        bufferedReader2.readLine();
+        String line2 = null;
+        while ((line2 = bufferedReader2.readLine()) != null) {
+            System.out.println(line2);
+        }
+        bufferedReader2.close();
+
+        //Change = (Close-Open)/Open
+
+
+
+
+        }
+    }
