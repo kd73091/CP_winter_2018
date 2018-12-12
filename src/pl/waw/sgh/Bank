@@ -1,0 +1,86 @@
+package pl.waw.sgh.pl;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Bank {
+
+    private List<Customer> custList = new ArrayList<>();
+
+    private List<pl.waw.sgh.pl.Account> accList = new ArrayList<>();
+
+    private Integer lastCustID = 0;
+
+    private Integer lastAccID = 100;
+
+    // Public API
+    public Customer newCustomer(String firstName,
+                                String lastName,
+                                String email) {
+        Customer cust = new Customer(lastCustID++, firstName,
+                lastName, email);
+        custList.add(cust);
+        return cust;
+    }
+
+    public pl.waw.sgh.pl.Account newAccount(Customer cust, String accType) {
+        Account acc;
+        switch (accType) {
+            case "Savings":
+                acc = new SavingsAccount(lastAccID++, 0.0, cust);
+                break;
+            case "Debit":
+                acc = new DebitAccount(lastAccID++, 0.0, cust);
+                break;
+            default:
+                acc = new CheckingAccount(lastAccID++, 0.0, cust);
+        }
+        accList.add(acc);
+        return acc;
+    }
+
+    private pl.waw.sgh.pl.Account findAccountByID(Integer accID) {
+        for (pl.waw.sgh.pl.Account acc : accList) {
+            if (acc.getAccountID().equals(accID))
+                return acc;
+        }
+
+        System.out.println("Non existing account");
+        return null;
+    }
+
+
+
+    public void transfer(Integer fromAccID, Integer toAccID, Double amount) {
+
+        Account accountfrom = findAccountByID(fromAccID);
+        Account accountto =  findAccountByID(toAccID);
+        if(accountfrom == null | accountto==null)
+        {
+            System.out.println("Transfer not possible- non existing account");
+            return;
+
+        }
+
+        BigDecimal stateofaccount = accountfrom.getBalance();
+        BigDecimal decimalamount = BigDecimal.valueOf(amount);
+
+        if(stateofaccount.compareTo(decimalamount) == -1)
+        {
+            System.out.println("You don't have enough money on the account");
+            return;
+        }
+
+        accountfrom.charge(amount);
+        accountto.deposit(amount);
+    }
+
+    @Override
+    public String toString() {
+        return "Bank{" +
+                "custs=\n" + custList +
+                ",\naccs=\n" + accList +
+                '}';
+    }
+}
