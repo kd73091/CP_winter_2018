@@ -2,7 +2,7 @@ package pl.waw.sgh.pl;
 
 public class PlayWithBank {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NotEnoughMoneyException {
         Bank bank = new Bank();
         Customer c1 = bank.newCustomer("John",
                 "Brown", "john@brown.com");
@@ -15,14 +15,27 @@ public class PlayWithBank {
         Account a4 = bank.newAccount(c2, "Debit");
         Account a5 = bank.newAccount(c2, "Savings");
         a1.deposit(150.0);
-        //a2.deposit(100.0);
-       // a2.charge(25.0);
+        a3.deposit(150.0);
+        a4.deposit(100.0);
+        // a2.charge(25.0);
 
         // Transfer 50.00 from accID 100 to 102
-        bank.transfer(a1.getAccountID(), a2.getAccountID(), 50.00);
+        System.out.println("Transaction 1:");
+        bank.transfer(a1.getAccountID(), a4.getAccountID(), 50.00);
+        System.out.println(bank);
 
+        System.out.println("\n\nTransaction 2:");
         bank.transfer(50000,60000,200.00);
+        System.out.println(bank);
 
+        // Transfer 150.00 from accID 100 to 104
+        System.out.println("\n\nTransaction 3:");
+        bank.transfer(a1.getAccountID(), a5.getAccountID(),150.00);
+        System.out.println(bank);
+
+        // Transfer 150.00 from accID 100 to 104
+        System.out.println("\n\nTransaction 3:");
+        bank.transfer(a1.getAccountID(), a5.getAccountID(),150.00);
         System.out.println(bank);
 
     }
