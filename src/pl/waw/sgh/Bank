@@ -1,5 +1,6 @@
 package pl.waw.sgh.pl;
 
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,41 +47,64 @@ public class Bank {
                 return acc;
         }
 
-        System.out.println("Non existing account");
         return null;
     }
 
 
+    public void transfer(Integer fromAccID, Integer toAccID, Double amount) throws NotEnoughMoneyException {
 
-    public void transfer(Integer fromAccID, Integer toAccID, Double amount) {
-
-        Account accountfrom = findAccountByID(fromAccID);
-        Account accountto =  findAccountByID(toAccID);
-        if(accountfrom == null | accountto==null)
-        {
+        Account accountFrom = findAccountByID(fromAccID);
+        Account accountTo = findAccountByID(toAccID);
+        if (accountFrom == null | accountTo == null) {
             System.out.println("Transfer not possible- non existing account");
             return;
 
         }
 
-        BigDecimal stateofaccount = accountfrom.getBalance();
-        BigDecimal decimalamount = BigDecimal.valueOf(amount);
+        BigDecimal decimalAmount = BigDecimal.valueOf(amount);
+        boolean canTransfer = accountFrom.getBalance().compareTo(decimalAmount) >= 0;   // enough money on the account
 
-        if(stateofaccount.compareTo(decimalamount) == -1)
-        {
-            System.out.println("You don't have enough money on the account");
-            return;
+        if (!canTransfer) {
+            System.out.println("You don't have enough money on the account " + accountFrom.getAccountID());
+            System.out.println("Searching another account...");
+
+            Customer customer1 = accountFrom.getCustomer();
+            List<Account> accounts = this.findAccountsByCustomer(customer1.getCustomerID());
+            for (Account customerAccount : accounts) {
+                if (!customerAccount.getAccountID().equals(fromAccID) && customerAccount.getBalance().compareTo(decimalAmount) >= 0) {
+                    accountFrom = customerAccount;
+                    canTransfer = true;
+                    System.out.println("Enough money on the account " + customerAccount.getAccountID() + " - transfer possible");
+                }
+            }
         }
 
-        accountfrom.charge(amount);
-        accountto.deposit(amount);
+        if (canTransfer) {
+            accountFrom.charge(amount);
+            accountTo.deposit(amount);
+            System.out.println("Transfer successful");
+        } else {
+            System.out.println("Transfer not possible due not enough money on customer's account");
+        }
     }
 
+    private List<Account> findAccountsByCustomer(Integer customerId) {
+        List<Account> customerAccounts = new ArrayList<>();
+        for (Account account : accList) {
+            if (account.getCustomerId() == customerId) {
+                customerAccounts.add(account);
+            }
+        }
+        return customerAccounts;
+    }
+
+
     @Override
-    public String toString() {
+    public String toString () {
         return "Bank{" +
                 "custs=\n" + custList +
                 ",\naccs=\n" + accList +
                 '}';
     }
 }
+
