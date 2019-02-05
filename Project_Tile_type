@@ -1,0 +1,11 @@
+package project;
+
+public enum TileType {
+
+	Fruit,
+	
+	SnakeHead,
+	
+	SnakeBody
+	
+}
