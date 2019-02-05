@@ -1,0 +1,13 @@
+package project;
+
+public enum Direction {
+
+	North,
+
+	East,
+
+	South,
+
+	West
+	
+}
